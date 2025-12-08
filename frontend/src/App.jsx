@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Upload, Camera, Sparkles, Zap, Share2, Award, X } from 'lucide-react';
+import { Upload, Camera, Sparkles, Zap, Share2, Award, X, Loader2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
@@ -8,6 +8,7 @@ function App() {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null); // Onde guardamos a resposta da IA
+  const [error, setError] = useState(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -36,7 +37,8 @@ function App() {
       setResult(response.data); // Salva o JSON da IA
     } catch (error) {
       console.error("Erro ao analisar:", error);
-      alert("Erro ao conectar com a IA. O servidor Python está rodando?");
+      setError("Erro ao conectar com a IA. O servidor Python está rodando?");
+      setTimeout(() => setError(null), 5000);
     } finally {
       setLoading(false);
     }
@@ -117,13 +119,13 @@ function App() {
               className={`w-full mt-6 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all
                 ${!selectedImage 
                   ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
-                  : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:shadow-lg hover:shadow-purple-500/25 hover:scale-[1.02]'
+                  : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:shadow-lg hover:shadow-purple-500/25 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:shadow-none'
                 }
               `}
             >
               {loading ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <Loader2 className="animate-spin" size={20} />
                   Processando...
                 </>
               ) : (
@@ -200,6 +202,26 @@ function App() {
               </div>
 
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* Toast de Erro */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: 20, x: '-50%' }}
+            className="fixed bottom-6 left-1/2 bg-red-500/90 backdrop-blur-md text-white px-6 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 border border-red-400/50"
+          >
+            <AlertCircle size={24} />
+            <span className="font-medium">{error}</span>
+            <button
+              onClick={() => setError(null)}
+              className="ml-2 hover:bg-white/20 p-1 rounded-full transition-colors"
+            >
+              <X size={16} />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
