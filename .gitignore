@@ -44,3 +44,11 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# ========================
+# 🧪 TESTES & CACHES
+# ========================
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
