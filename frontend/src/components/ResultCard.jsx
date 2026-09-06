@@ -1,32 +1,34 @@
 /**
  * @file ResultCard.jsx
- * @description Carta de resultado com o tier, título e comentário da IA.
+ * @description Carta de resultado: contexto detectado, tier, título,
+ * análise técnica e veredito da IA.
  */
 
 import { useState } from 'react';
 import { Award, Check, Share2, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+import RichText from './RichText';
 import { getRarityColor, isLegendary } from '../lib/constants';
+import { toPlainText } from '../lib/markdown';
 
 /**
- * Monta o texto compartilhável do resultado.
+ * Monta o texto compartilhável do resultado, sem marcação.
  *
- * @param {{rarity?: string, title?: string, comment?: string}} result
+ * @param {{rarity: string, title: string, comment: string}} result
  * @returns {string}
  */
-const buildShareText = (result) =>
-  `${result.rarity} — ${result.title}\n"${result.comment}"\n\nAvaliado no Legendary Feed AI.`;
+const buildShareText = ({ rarity, title, comment }) =>
+  `${rarity} — ${toPlainText(title)}\n"${toPlainText(comment)}"\n\nAvaliado no Legendary Feed AI.`;
 
 /**
  * Exibe o resultado da análise.
  *
  * Todos os campos são acessados de forma tolerante: se a API devolver um
- * objeto incompleto, a tela degrada em vez de quebrar. A versão anterior
- * chamava `result.rarity.includes('SSS')` direto e derrubava o app inteiro.
+ * objeto incompleto, a tela degrada em vez de quebrar.
  *
  * @param {object} props
- * @param {{rarity?: string, title?: string, comment?: string}} props.result
+ * @param {{scene?: string, rarity?: string, title?: string, analysis?: string, comment?: string}} props.result
  * @param {string|null} props.preview - URL da imagem analisada.
  * @param {File|null} props.file - Arquivo original, usado no compartilhamento.
  * @param {() => void} props.onReset - Volta para a tela de upload.
@@ -39,12 +41,12 @@ function ResultCard({ result, preview, file, onReset }) {
   const rarity = result?.rarity ?? 'TIER C';
   const title = result?.title ?? 'Sem título';
   const comment = result?.comment ?? '';
+  const scene = result?.scene ?? '';
+  const analysis = result?.analysis ?? '';
 
   /**
-   * Compartilha o resultado.
-   *
-   * Usa a Web Share API quando disponível (celulares) e cai para a área de
-   * transferência no desktop. Antes este botão não tinha handler nenhum.
+   * Compartilha o resultado via Web Share API, com fallback para a área de
+   * transferência no desktop.
    */
   const handleShare = async () => {
     const text = buildShareText({ rarity, title, comment });
@@ -97,17 +99,31 @@ function ResultCard({ result, preview, file, onReset }) {
             />
           )}
 
+          {scene && (
+            <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[0.65rem] font-bold uppercase tracking-wider bg-black/60 text-gray-200 border border-white/15 backdrop-blur">
+              <RichText>{scene}</RichText>
+            </span>
+          )}
+
           <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent pt-10">
             <div
               className={`inline-block px-3 py-1 rounded text-xs font-black tracking-widest mb-2 text-white bg-gradient-to-r ${getRarityColor(rarity)}`}
             >
               {rarity}
             </div>
-            <h2 className="text-2xl font-black text-white leading-tight">{title}</h2>
+            <h2 className="text-2xl font-black text-white leading-tight">
+              <RichText>{title}</RichText>
+            </h2>
           </div>
         </div>
 
         <div className="p-6 bg-gray-900">
+          {analysis && (
+            <p className="text-sm text-gray-400 leading-relaxed mb-4 pb-4 border-b border-gray-800">
+              <RichText>{analysis}</RichText>
+            </p>
+          )}
+
           <div className="flex gap-3 mb-4">
             <div
               className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center shrink-0"
@@ -116,7 +132,9 @@ function ResultCard({ result, preview, file, onReset }) {
               <span className="font-bold text-white text-xs">AI</span>
             </div>
             <div className="bg-gray-800 rounded-r-xl rounded-bl-xl p-3 text-sm text-gray-200 border border-gray-700">
-              <p>&ldquo;{comment}&rdquo;</p>
+              <p>
+                &ldquo;<RichText>{comment}</RichText>&rdquo;
+              </p>
             </div>
           </div>
 

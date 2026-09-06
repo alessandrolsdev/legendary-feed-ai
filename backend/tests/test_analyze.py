@@ -56,8 +56,10 @@ def test_analyze_retorna_classificacao(client, sample_image, fake_result, mock_a
     assert response.status_code == 200
     body = response.json()
     assert body == {
+        "scene": "Setup gamer",
         "rarity": "TIER A",
         "title": "Guerreiro do Código",
+        "analysis": "Luz lateral bem resolvida e cabos escondidos.",
         "comment": "Setup afiado, dev. Faltou o café.",
     }
 

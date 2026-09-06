@@ -52,7 +52,9 @@ def sample_image() -> bytes:
 @pytest.fixture
 def fake_result() -> AnalysisResult:
     return AnalysisResult(
+        scene="Setup gamer",
         rarity=RarityTier.EPIC,
         title="Guerreiro do Código",
+        analysis="Luz lateral bem resolvida e cabos escondidos.",
         comment="Setup afiado, dev. Faltou o café.",
     )

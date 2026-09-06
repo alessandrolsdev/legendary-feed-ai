@@ -163,11 +163,23 @@ cd frontend && npm run dev
 
 ```json
 {
+  "scene": "Setup gamer",
   "rarity": "TIER A",
   "title": "Guerreiro do Código",
+  "analysis": "Luz lateral bem resolvida e cabos escondidos com capricho.",
   "comment": "Setup bonito esse aí, dev! Faltou só o café pra ser perfeito."
 }
 ```
+
+Os campos formam a leitura da carta, na ordem em que o modelo os gera:
+
+| Campo | Papel |
+|-------|-------|
+| `scene` | Contexto identificado na foto, em até 3 palavras. Gerado **antes** do tier, para que o julgamento parta do contexto |
+| `rarity` | Tier de raridade (`TIER C`, `TIER B`, `TIER A` ou `TIER SSS`) |
+| `title` | Abertura impactante, com temática de RPG |
+| `analysis` | Leitura técnica da foto: enquadramento, luz, composição |
+| `comment` | Veredito final — a punchline |
 
 **Erros:**
 

@@ -70,7 +70,10 @@ def _build_config(settings: Settings) -> types.GenerateContentConfig:
     """Monta a configuração de geração, fixando o schema da resposta."""
     return types.GenerateContentConfig(
         system_instruction=SYSTEM_INSTRUCTION,
-        temperature=1.0,
+        # 0.85 fica na faixa criativa sem soltar o modelo a ponto de ele
+        # ignorar os critérios de tier. Acima disso a classificação começa
+        # a variar entre execuções para a mesma foto.
+        temperature=0.85,
         top_p=0.95,
         max_output_tokens=1024,
         response_mime_type="application/json",
