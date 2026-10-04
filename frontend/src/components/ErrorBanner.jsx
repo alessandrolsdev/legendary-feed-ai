@@ -22,7 +22,7 @@ function ErrorBanner({ message, onDismiss }) {
       exit={{ opacity: 0, y: -10 }}
       role="alert"
       aria-live="assertive"
-      className="w-full max-w-md mb-4 z-10 flex items-start gap-3 p-3 rounded-xl bg-red-950/60 border border-red-500/40 backdrop-blur"
+      className="mb-5 flex w-full max-w-md items-start gap-3 rounded-2xl border border-red-500/30 bg-red-950/40 p-4 backdrop-blur-xl"
     >
       <AlertTriangle className="text-red-400 shrink-0 mt-0.5" size={18} aria-hidden="true" />
       <p className="text-sm text-red-100 flex-1">{message}</p>

@@ -1,36 +1,11 @@
 /**
  * @file constants.js
- * @description Valores compartilhados entre os componentes da interface.
- */
-
-/** Tiers de raridade, na ordem canônica. */
-export const TIERS = {
-  COMMON: 'TIER C',
-  RARE: 'TIER B',
-  EPIC: 'TIER A',
-  LEGENDARY: 'TIER SSS',
-};
-
-/**
- * Gradiente Tailwind de cada tier.
- * O backend garante que `rarity` é sempre um destes valores.
- */
-const RARITY_COLORS = {
-  [TIERS.LEGENDARY]: 'from-yellow-400 via-orange-500 to-yellow-600',
-  [TIERS.EPIC]: 'from-purple-500 to-indigo-600',
-  [TIERS.RARE]: 'from-blue-400 to-cyan-500',
-  [TIERS.COMMON]: 'from-gray-500 to-gray-700',
-};
-
-const DEFAULT_COLOR = 'from-gray-500 to-gray-700';
-
-/**
- * Retorna as classes de gradiente correspondentes a um tier.
+ * @description Limites e formatos aceitos no upload.
  *
- * @param {string} [tier] - Tier de raridade.
- * @returns {string} Classes Tailwind de gradiente.
+ * Os metadados de cada tier (cor, descrição, exemplos) vivem em `tiers.js`,
+ * que é a fonte única consumida tanto pelo capítulo narrativo quanto pela
+ * carta de resultado.
  */
-export const getRarityColor = (tier) => RARITY_COLORS[tier] ?? DEFAULT_COLOR;
 
 /**
  * Indica se o tier é o lendário.

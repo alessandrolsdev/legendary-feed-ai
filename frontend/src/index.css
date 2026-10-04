@@ -2,6 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    @apply bg-gray-900 text-white; /* Já definindo o Dark Mode padrão */
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Reserva espaço para a barra de progresso ao pular por âncora. */
+    scroll-padding-top: 4rem;
+    /*
+     * Rede de segurança contra barra horizontal. `clip` em vez de `hidden`
+     * de propósito: `hidden` cria um contêiner de rolagem e quebraria os
+     * `position: sticky` do capítulo dos tiers.
+     */
+    overflow-x: clip;
+  }
+
+  body {
+    @apply bg-ink text-slate-200 font-sans antialiased;
+  }
+
+  /* Alvo de foco visível e consistente em toda a interface. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-violet ring-offset-2 ring-offset-ink;
+  }
+
+  ::selection {
+    @apply bg-brand-violet text-white;
+  }
+}
+
+@layer components {
+  /* Rótulo técnico curto: tier, contexto, numeração de etapa. */
+  .label-mono {
+    @apply font-mono text-[0.7rem] uppercase tracking-[0.18em] text-slate-400;
+  }
+
+  /* Cartão de superfície elevada, com borda de 1px em luz baixa. */
+  .surface {
+    @apply rounded-3xl border border-line bg-ink-soft/80 backdrop-blur-xl;
+  }
+}
+
+@layer utilities {
+  /* Textura de grão: quebra o banding dos gradientes grandes em telas OLED. */
+  .bg-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  .text-gradient-brand {
+    @apply bg-gradient-to-r from-brand-violet via-brand-pink to-brand-ember bg-clip-text text-transparent;
+  }
+}
+
+/*
+ * Motion reduzido.
+ *
+ * Distúrbios vestibulares afetam uma parcela significativa das pessoas, e
+ * animações longas dirigidas por scroll são justamente o gatilho. Aqui o
+ * corte é total no CSS; os componentes que dependem de JavaScript consultam
+ * `useReducedMotion` e trocam a cena sticky por um grid estático.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

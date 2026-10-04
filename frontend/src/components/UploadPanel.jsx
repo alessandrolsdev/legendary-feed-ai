@@ -8,6 +8,7 @@ import { Camera, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { ACCEPTED_MIME_TYPES } from '../lib/constants';
+import { EASE_OUT } from '../lib/motion';
 
 /**
  * Painel de upload com suporte a clique, teclado e arrastar-e-soltar.
@@ -42,10 +43,11 @@ function UploadPanel({ preview, loading, hasImage, onSelectFile, onAnalyze }) {
   return (
     <motion.div
       key="upload"
-      initial={{ scale: 0.9, opacity: 0 }}
+      initial={{ scale: 0.96, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0.9, opacity: 0 }}
-      className="w-full max-w-md bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-3xl p-6 shadow-2xl relative z-10"
+      exit={{ scale: 0.96, opacity: 0 }}
+      transition={{ duration: 0.4, ease: EASE_OUT }}
+      className="surface w-full max-w-md p-5 shadow-card"
     >
       {/* O input fica visualmente oculto, mas continua acessível a leitores
           de tela e à navegação por teclado através do label. */}
@@ -66,31 +68,30 @@ function UploadPanel({ preview, loading, hasImage, onSelectFile, onAnalyze }) {
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className={`group block aspect-[4/5] rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300 overflow-hidden
-          focus-within:ring-2 focus-within:ring-purple-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-950
+        className={`group relative block aspect-[4/5] cursor-pointer overflow-hidden rounded-2xl border border-dashed transition-all duration-300 ease-out
+          focus-within:ring-2 focus-within:ring-brand-violet focus-within:ring-offset-2 focus-within:ring-offset-ink
           ${
             isDragging
-              ? 'border-purple-400 bg-purple-900/20'
+              ? 'border-brand-violet bg-brand-violet/10'
               : preview
-                ? 'border-purple-500/50 bg-gray-900'
-                : 'border-gray-700 hover:border-gray-500 hover:bg-gray-800/50'
+                ? 'border-brand-violet/40 bg-ink-raised'
+                : 'border-white/15 bg-white/[0.02] hover:border-white/30 hover:bg-white/[0.04]'
           }`}
       >
         {preview ? (
           <img
             src={preview}
             alt="Pré-visualização da foto selecionada"
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
           />
         ) : (
-          <div className="h-full flex flex-col items-center justify-center text-center p-6">
-            <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <Camera className="text-gray-400" size={32} aria-hidden="true" />
+          <div className="flex h-full flex-col items-center justify-center p-6 text-center">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-line bg-ink-raised transition-transform duration-300 ease-out group-hover:scale-110">
+              <Camera className="text-slate-400" size={28} aria-hidden="true" />
             </div>
-            <p className="text-gray-300 font-medium">Toque para enviar foto</p>
-            <p className="text-gray-500 text-xs mt-1">
-              JPG, PNG ou WEBP — até 8 MB
-            </p>
+            <p className="font-display text-lg font-bold text-white">Solte a foto aqui</p>
+            <p className="mt-1 text-sm text-slate-500">ou toque para escolher</p>
+            <p className="label-mono mt-4 text-slate-600">JPG · PNG · WEBP — até 8 MB</p>
           </div>
         )}
       </label>
@@ -99,26 +100,25 @@ function UploadPanel({ preview, loading, hasImage, onSelectFile, onAnalyze }) {
         type="button"
         onClick={onAnalyze}
         disabled={!hasImage || loading}
-        className={`w-full mt-6 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all
-          focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-gray-950
+        className={`mt-5 flex w-full items-center justify-center gap-2.5 rounded-2xl py-4 font-display text-base font-bold uppercase tracking-wide transition-all duration-300 ease-out
           ${
             !hasImage || loading
-              ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
-              : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:shadow-lg hover:shadow-purple-500/25 hover:scale-[1.02]'
+              ? 'cursor-not-allowed bg-white/5 text-slate-600'
+              : 'bg-gradient-to-r from-brand-violet to-brand-pink text-white hover:scale-[1.02] hover:shadow-glow hover:shadow-brand-violet/40'
           }`}
       >
         {loading ? (
           <>
             <span
-              className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"
+              className="h-5 w-5 animate-spin rounded-full border-2 border-white/25 border-t-white"
               aria-hidden="true"
             />
             Processando...
           </>
         ) : (
           <>
-            <Zap size={20} fill="currentColor" aria-hidden="true" />
-            AVALIAR AGORA
+            <Zap size={18} fill="currentColor" aria-hidden="true" />
+            Avaliar agora
           </>
         )}
       </button>
